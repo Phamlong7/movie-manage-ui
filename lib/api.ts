@@ -27,10 +27,11 @@ const API_URL = getApiUrl();
 export interface Movie {
   id: number;
   title: string;
-  genre?: string;
-  rating?: number;
-  posterImage?: string;
+  genre?: string | null;
+  rating?: number | null;
+  posterImage?: string | null;
   createdAt: string;
+  updatedAt?: string | null;
 }
 
 export interface MovieDto {
@@ -103,11 +104,19 @@ class MovieAPI {
     return response.json();
   }
 
-  async getAll(search?: string, genre?: string, sortBy?: string): Promise<Movie[]> {
+  /**
+   * Get all movies with optional search, filter and sort
+   * @param search - Search by title (case-insensitive partial match)
+   * @param genre - Filter by genre (case-insensitive exact match)
+   * @param sortBy - Sort field: 'title' or 'rating' (default: 'title')
+   * @param sortOrder - Sort order: 'asc'/'A-Z' or 'desc'/'Z-A' (default: 'asc')
+   */
+  async getAll(search?: string, genre?: string, sortBy?: string, sortOrder?: string): Promise<Movie[]> {
     const params = new URLSearchParams();
     if (search) params.append('search', search);
     if (genre) params.append('genre', genre);
     if (sortBy) params.append('sortBy', sortBy);
+    if (sortOrder) params.append('sortOrder', sortOrder);
     
     const url = `${this.baseUrl}/movies${params.toString() ? `?${params}` : ''}`;
     const response = await fetch(url, this.getFetchOptions());

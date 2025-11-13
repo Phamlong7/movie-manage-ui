@@ -21,7 +21,8 @@ export default function Home() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [search, setSearch] = useState('');
   const [genreFilter, setGenreFilter] = useState('');
-  const [sortBy, setSortBy] = useState('');
+  const [sortByField, setSortByField] = useState('title');
+  const [sortOrder, setSortOrder] = useState('asc');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,7 +30,7 @@ export default function Home() {
     try {
       setLoading(true);
       setError(null);
-      const data = await movieAPI.getAll(search, genreFilter, sortBy);
+      const data = await movieAPI.getAll(search, genreFilter, sortByField, sortOrder);
       setMovies(data);
     } catch (err) {
       console.error('Error fetching movies:', err);
@@ -37,11 +38,30 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }, [search, genreFilter, sortBy]);
+  }, [search, genreFilter, sortByField, sortOrder]);
 
   useEffect(() => {
     fetchMovies();
   }, [fetchMovies]);
+
+  const handleSortChange = (value: string) => {
+    if (!value) {
+      setSortByField('title');
+      setSortOrder('asc');
+    } else if (value === 'title-asc') {
+      setSortByField('title');
+      setSortOrder('asc');
+    } else if (value === 'title-desc') {
+      setSortByField('title');
+      setSortOrder('desc');
+    } else if (value === 'rating-asc') {
+      setSortByField('rating');
+      setSortOrder('asc');
+    } else if (value === 'rating-desc') {
+      setSortByField('rating');
+      setSortOrder('desc');
+    }
+  };
 
   const handleDelete = async (id: number, title: string) => {
     if (!window.confirm(`Are you sure you want to delete "${title}"?`)) {
@@ -57,7 +77,7 @@ export default function Home() {
     }
   };
 
-  const renderStars = (rating?: number) => {
+  const renderStars = (rating?: number | null) => {
     if (!rating) return <span className="text-gray-400 text-sm">No rating</span>;
     return (
       <div className="flex items-center gap-1">
@@ -110,11 +130,10 @@ export default function Home() {
               ))}
             </select>
             <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              value={`${sortByField}-${sortOrder}`}
+              onChange={(e) => handleSortChange(e.target.value)}
               className="px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-sm sm:text-base"
             >
-              <option value="">📅 Default Sort</option>
               <option value="title-asc">🔤 Title (A-Z)</option>
               <option value="title-desc">🔡 Title (Z-A)</option>
               <option value="rating-asc">⭐ Rating (Low to High)</option>
