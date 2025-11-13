@@ -118,35 +118,35 @@ class MovieAPI {
     if (sortBy) params.append('sortBy', sortBy);
     if (sortOrder) params.append('sortOrder', sortOrder);
     
-    const url = `${this.baseUrl}/movies${params.toString() ? `?${params}` : ''}`;
+    const url = `${this.baseUrl}/Movies${params.toString() ? `?${params}` : ''}`;
     const response = await fetch(url, this.getFetchOptions());
     
     return this.handleResponse<Movie[]>(response);
   }
 
   async getById(id: number): Promise<Movie> {
-    const url = `${this.baseUrl}/movies/${id}`;
+    const url = `${this.baseUrl}/Movies/${id}`;
     const response = await fetch(url, this.getFetchOptions());
     
     return this.handleResponse<Movie>(response);
   }
 
   async create(data: MovieDto): Promise<Movie> {
-    const url = `${this.baseUrl}/movies`;
+    const url = `${this.baseUrl}/Movies`;
     const response = await fetch(url, this.getFetchOptions('POST', data));
     
     return this.handleResponse<Movie>(response);
   }
 
   async update(id: number, data: MovieDto): Promise<Movie> {
-    const url = `${this.baseUrl}/movies/${id}`;
+    const url = `${this.baseUrl}/Movies/${id}`;
     const response = await fetch(url, this.getFetchOptions('PUT', data));
     
     return this.handleResponse<Movie>(response);
   }
 
   async delete(id: number): Promise<void> {
-    const url = `${this.baseUrl}/movies/${id}`;
+    const url = `${this.baseUrl}/Movies/${id}`;
     const response = await fetch(url, this.getFetchOptions('DELETE'));
     
     await this.handleResponse<void>(response);

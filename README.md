@@ -33,38 +33,208 @@ A simple and elegant web application for managing movies you want to watch. Buil
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ installed
-- Backend API running (see backend setup)
+- Node.js 18+ or higher installed on your machine
+- npm (comes with Node.js) or yarn package manager
+- Backend API server running on `http://localhost:5203` (see backend setup documentation)
+- Git installed (for cloning the repository)
 
-### Installation
+### Step-by-Step Installation Guide
 
-1. Clone the repository:
+#### Step 1: Clone the Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/Phamlong7/movie-manage-ui.git
 cd movie-manage-ui
 ```
 
-2. Install dependencies:
+#### Step 2: Install Dependencies
+Install all required packages using npm:
 ```bash
 npm install
 ```
 
-3. Configure API URL:
+This will install:
+- Next.js 16.0.2
+- React 19.2.0
+- TypeScript 5
+- Tailwind CSS 4
+- And other dependencies
 
-Create a `.env.local` file:
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5203/api
-# Optional: Use proxy to avoid CORS issues
-NEXT_PUBLIC_USE_API_PROXY=false
+#### Step 3: Configure Environment Variables
+Create a `.env.local` file in the root directory of the project:
+
+```bash
+# For Windows (PowerShell)
+New-Item .env.local
+
+# For macOS/Linux
+touch .env.local
 ```
 
-4. Run the development server:
+Add the following configuration to `.env.local`:
+
+**Option 1: Using Deployed Backend (Recommended for quick start)**
+```env
+# Backend API URL - Using deployed backend on Render
+NEXT_PUBLIC_API_URL=https://moviemanage.onrender.com/api
+
+# Direct API calls (CORS is enabled on backend)
+NEXT_PUBLIC_USE_API_PROXY=false
+
+# Development mode
+NODE_ENV=development
+```
+
+**Option 2: Using Local Backend**
+```env
+# Backend API URL - Point to your local backend server
+NEXT_PUBLIC_API_URL=http://localhost:5203/api
+
+# Use API Proxy - Set to true if backend doesn't have CORS enabled
+NEXT_PUBLIC_USE_API_PROXY=false
+
+# Development mode
+NODE_ENV=development
+```
+
+**Important Notes:**
+- **Deployed Backend:** Already running at `https://moviemanage.onrender.com` - ready to use!
+- **Local Backend:** Must be running on `http://localhost:5203` before starting frontend
+- CORS is enabled on both deployed and local backend
+- If you encounter CORS issues, set `NEXT_PUBLIC_USE_API_PROXY=true`
+
+#### Step 4: Verify Backend API Connection
+
+**If using deployed backend (recommended):**
+1. Test the deployed API in your browser:
+   ```
+   https://moviemanage.onrender.com/api/movies
+   ```
+2. You should see a JSON response (empty array `[]` is fine)
+3. Backend is ready - proceed to Step 5!
+
+**If using local backend:**
+1. Start your backend server (it should run on port 5203)
+2. Test the local API endpoint in your browser:
+   ```
+   http://localhost:5203/api/movies
+   ```
+3. You should see a JSON response (empty array `[]` is fine)
+4. Check Swagger documentation (if available):
+   ```
+   http://localhost:5203/swagger
+   ```
+
+#### Step 5: Run the Development Server
+Start the Next.js development server:
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the app.
+You should see output similar to:
+```
+▲ Next.js 16.0.2 (Turbopack)
+- Local:        http://localhost:3000
+- Network:      http://192.168.x.x:3000
+- Environments: .env.local
+
+✓ Starting...
+✓ Ready in 1153ms
+```
+
+#### Step 6: Open the Application
+Open your web browser and navigate to:
+```
+http://localhost:3000
+```
+
+You should see the Movie Management application homepage.
+
+### 🧪 Testing the Application
+
+After the application loads, test the following features:
+
+1. **View Movie List** - Should display empty state if no movies exist
+2. **Add New Movie**:
+   - Click "Add New Movie" button
+   - Fill in the title (required)
+   - Optionally add genre, rating, and poster URL
+   - Click "Add Movie"
+   - You should be redirected to the main page
+
+3. **Search Movies** - Type in the search box to filter by title
+4. **Filter by Genre** - Select a genre from the dropdown
+5. **Sort Movies** - Choose different sort options
+6. **Edit Movie** - Click "Edit" button on any movie card
+7. **Delete Movie** - Click "Delete" and confirm the action
+
+### 🛠️ Available Scripts
+
+```bash
+# Start development server (with hot reload)
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Run ESLint to check code quality
+npm run lint
+```
+
+### 📋 Troubleshooting
+
+#### Issue 1: Port 3000 is already in use
+```bash
+# Kill the process using port 3000 (Windows PowerShell)
+Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Process
+
+# Or use a different port
+npm run dev -- -p 3001
+```
+
+#### Issue 2: CORS Error
+If you see "CORS policy" errors in the browser console:
+
+**Solution 1:** Enable CORS on your backend server
+**Solution 2:** Use the API proxy by updating `.env.local`:
+```env
+NEXT_PUBLIC_USE_API_PROXY=true
+```
+
+#### Issue 3: Cannot connect to backend API
+- Verify backend is running: `http://localhost:5203/api/movies`
+- Check the `NEXT_PUBLIC_API_URL` in `.env.local`
+- Ensure there's no firewall blocking the connection
+- Check if the backend port is 5203 (not 5000 or other)
+
+#### Issue 4: Build errors
+```bash
+# Clear Next.js cache and reinstall dependencies
+rm -rf .next node_modules package-lock.json
+npm install
+npm run build
+```
+
+#### Issue 5: Environment variables not loading
+- Restart the dev server after changing `.env.local`
+- Ensure the file is named exactly `.env.local` (not `.env`)
+- Environment variables must start with `NEXT_PUBLIC_` to be available in the browser
+
+### 🌐 Network Access
+
+To access the application from other devices on the same network:
+
+1. Note the Network URL from the dev server output:
+   ```
+   - Network:      http://192.168.x.x:3000
+   ```
+
+2. Open this URL on any device connected to the same network
+
+3. Ensure your firewall allows incoming connections on port 3000
 
 ## 🛠️ Technology Stack
 
